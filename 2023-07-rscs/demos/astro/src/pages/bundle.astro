@@ -1,0 +1,13 @@
+---
+import { HeavyComponent } from "../ui/HeavyComponent";
+
+export const prerender = false;
+
+const doIt = Math.random() > 0.5;
+console.log("Home", doIt);
+---
+
+<div>
+  <h1>Astro</h1>
+  {doIt && <HeavyComponent client:load />}
+</div>
