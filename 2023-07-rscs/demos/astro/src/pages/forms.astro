@@ -1,0 +1,12 @@
+---
+import { Forms } from "../ui/Forms";
+
+export const prerender = false;
+
+const doIt = Math.random() > 0.5;
+console.log("Home", doIt);
+---
+
+<div>
+    <Forms client:load />
+</div>
