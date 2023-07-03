@@ -4,7 +4,7 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [react()],
-	adapter: nodejs({ mode: "standalone" }),
-	output: "hybrid",
+  integrations: [react()],
+  adapter: nodejs({ mode: "standalone" }),
+  output: "hybrid",
 });

@@ -19,15 +19,15 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 type CreateAstroContextOptions = Partial<{
-	/** The incoming request. */
-	req: Request;
-	/** The outgoing headers. */
-	resHeaders: Headers;
+  /** The incoming request. */
+  req: Request;
+  /** The outgoing headers. */
+  resHeaders: Headers;
 }>;
 
 /** Replace this with an object if you want to pass things to `createContextInner`. */
 type CreateContextOptions = {
-	userId?: string;
+  userId?: string;
 };
 
 /**
@@ -41,7 +41,7 @@ type CreateContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
-	return opts;
+  return opts;
 };
 
 /**
@@ -52,11 +52,11 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * @see https://trpc.io/docs/server/context#inner-and-outer-context
  */
 export const createTRPCContext = (opts: CreateAstroContextOptions) => {
-	const contextInner = createInnerTRPCContext({});
-	return {
-		...contextInner,
-		...opts,
-	};
+  const contextInner = createInnerTRPCContext({});
+  return {
+    ...contextInner,
+    ...opts,
+  };
 };
 
 /**
@@ -66,41 +66,40 @@ export const createTRPCContext = (opts: CreateAstroContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { createServerSideHelpers } from '@trpc/react-query/server';
-import { AnyRouter, initTRPC, TRPCError } from '@trpc/server';
-import { parse } from 'cookie';
-import superjson from 'superjson';
-import { unthunk } from 'unthunk';
-import { z } from 'zod';
-import { ZodError } from 'zod';
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { AnyRouter, initTRPC, TRPCError } from "@trpc/server";
+import { parse } from "cookie";
+import superjson from "superjson";
+import { unthunk } from "unthunk";
+import { z } from "zod";
+import { ZodError } from "zod";
 
-import { AUTH_COOKIE_NAME, HTTP_ONLY_AUTH_COOKIE_NAME } from '../../constants';
-import { propelauth } from '../propelauth';
+import { AUTH_COOKIE_NAME, HTTP_ONLY_AUTH_COOKIE_NAME } from "../../constants";
+import { propelauth } from "../propelauth";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
-	transformer: superjson,
-	errorFormatter({ shape, error }) {
-		return {
-			...shape,
-			data: {
-				...shape.data,
-				zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-			},
-		};
-	},
+  transformer: superjson,
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
+  },
 });
 
 /**
  * 2.5 ssr helper
  */
 export const createTRPCServerSideHelpers =
-	<T extends AnyRouter>(router: T) =>
-	(ctx: ReturnType<typeof createTRPCContext>) =>
-		createServerSideHelpers<T>({
-			router,
-			ctx,
-			transformer: superjson,
-		});
+  <T extends AnyRouter>(router: T) => (ctx: ReturnType<typeof createTRPCContext>) =>
+    createServerSideHelpers<T>({
+      router,
+      ctx,
+      transformer: superjson,
+    });
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)

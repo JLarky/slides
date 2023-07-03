@@ -28,14 +28,10 @@ export const Forms = () => {
 
 const Submit = () => {
   const { pending } = useFormStatus();
-  return (
-    <input name="submit" type="submit" value="Submit" disabled={pending} />
-  );
+  return <input name="submit" type="submit" value="Submit" disabled={pending} />;
 };
 
 const Submit2 = () => {
   const { pending } = useFormStatus();
-  return (
-    <input name="submit2" type="submit" value="Submit2" disabled={pending} />
-  );
+  return <input name="submit2" type="submit" value="Submit2" disabled={pending} />;
 };
