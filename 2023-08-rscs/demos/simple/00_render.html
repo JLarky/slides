@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Title</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Title</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module">
-      import ReactDOM from "https://esm.sh/react-dom";
+      import { hydrateRoot } from "https://esm.sh/react-dom/client";
 
-      ReactDOM.render("Hello", document.getElementById("root"));
+      hydrateRoot(document.getElementById("root"), "Hello");
     </script>
   </body>
 </html>

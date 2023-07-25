@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head><title>Title</title></head><body><div id="root"><div>Hello</div></div><script type="module">
+      import React from "https://esm.sh/react?dev";
+      import { hydrateRoot } from "https://esm.sh/react-dom/client?dev";
+      import { jsx } from "https://esm.sh/react/jsx-runtime?dev";
+
+      const App = () => {
+        const [name, setName] = React.useState("Hello");
+        React.useEffect(() => {
+          setTimeout(() => {
+            setName("Hello World");
+          }, 1000);
+        }, []);
+        return jsx("div", { children: name });
+      };
+
+      hydrateRoot(
+        document,
+        jsx("html", {
+          lang: "en",
+          children: [
+            jsx("head", {
+              key: 1,
+              children: jsx("title", {
+                children: "Title",
+              }),
+            }),
+            jsx("body", {
+              key: 2,
+              children: [
+              jsx("div", {
+                  key: 1,
+                  id: "root",
+                  children: jsx(App, {})
+                }),
+                jsx("script", {
+                  suppressHydrationWarning: true,
+                  key: 2,
+                  children: "",
+                }),
+              ],
+            }),
+          ],
+        })
+      );
+    </script></body></html>
