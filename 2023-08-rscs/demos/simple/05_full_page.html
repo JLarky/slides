@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+  </head>
+  <body>
+    <div id="root"><div>Hello</div></div>
+    <script type="module">
+      import React from "https://esm.sh/react";
+      import ReactDOM from "https://esm.sh/react-dom";
+      import { jsx } from "https://esm.sh/react/jsx-runtime";
+
+      const App = () => {
+        const [name, setName] = React.useState("Hello");
+        React.useEffect(() => {
+          setTimeout(() => {
+            setName("Hello World");
+          }, 1000);
+        }, []);
+        return jsx("div", { children: name });
+      };
+
+      ReactDOM.hydrate(
+        jsx("html", {
+          children: [
+            jsx("head", {
+              children: jsx("title", {
+                children: "Title",
+              }),
+            }),
+            jsx("body", {
+              children: jsx("div", {
+                children: jsx(App, {}),
+              }),
+            }),
+          ],
+        }),
+        document
+      );
+    </script>
+  </body>
+</html>
