@@ -9,7 +9,7 @@
     <div id="root"></div>
     <script type="module">
       import React from "https://esm.sh/react";
-      import { hydrateRoot } from "https://esm.sh/react-dom/client";
+      import { createRoot } from "https://esm.sh/react-dom/client";
       import { jsx } from "https://esm.sh/react/jsx-runtime";
 
       const App = () => {
@@ -17,7 +17,7 @@
         return jsx("div", { children: name });
       };
 
-      hydrateRoot(document.getElementById("root"), jsx(App, {}));
+      createRoot(document.getElementById("root")).render(jsx(App, {}));
     </script>
   </body>
 </html>

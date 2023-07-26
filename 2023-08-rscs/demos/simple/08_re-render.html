@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><title>Title</title>
+  </head><body><div id="root"><div>Hello</div></div><script type="module">
+      import React from "https://esm.sh/react?dev";
+        import { hydrateRoot } from "https://esm.sh/react-dom/client?dev";
+        import { jsx, jsxs } from "https://esm.sh/react/jsx-runtime?dev";
+
+        const App = (props) => {
+          const [name, setName] = React.useState("Hello");
+          React.useEffect(() => {
+            setTimeout(() => {
+              setName("Hello World");
+            }, 1000);
+          }, []);
+          return jsxs("div", { children: [name, props.children?.()]});
+        };
+
+        const root1 = jsxs("html", {
+          lang: "en",
+          children: [
+            jsx("head", {
+              children: jsx("title", {
+                children: "Title",
+              }),
+            }),
+            jsxs("body", {
+              children: [
+                jsx("div", {
+                  id: "root",
+                  children: jsx(App, {})
+                }),
+                jsx("script", {
+                  type: "module",
+                  children: document.body.firstChild.nextSibling.textContent,
+                }),
+              ],
+            }),
+          ],
+        });
+
+        const root2 = jsxs("html", {
+          lang: "en",
+          children: [
+            jsx("head", {
+              children: jsx("title", {
+                children: "New Title",
+              }),
+            }),
+            jsxs("body", {
+              children: [
+                jsx("div", {
+                  id: "root",
+                  children: jsx(App, {
+                    children: () => jsx("div", {children: "render prop"})
+                  })
+                }),
+                jsx("script", {
+                  type: "module",
+                  children: document.body.firstChild.nextSibling.textContent,
+                }),
+              ],
+            }),
+          ],
+        });
+
+        const root = hydrateRoot(document, root1);
+
+        setTimeout(() => {
+          root.render(root2);
+        }, 2000);
+    </script>
+  </body>
+</html>
