@@ -2,7 +2,7 @@
 <html lang="en"><head><title>Title</title></head><body><div id="root"><div>Hello</div></div><script type="module">
       import React from "https://esm.sh/react?dev";
       import { hydrateRoot } from "https://esm.sh/react-dom/client?dev";
-      import { jsx } from "https://esm.sh/react/jsx-runtime?dev";
+      import { jsx, jsxs } from "https://esm.sh/react/jsx-runtime?dev";
 
       const App = () => {
         const [name, setName] = React.useState("Hello");
@@ -16,26 +16,22 @@
 
       hydrateRoot(
         document,
-        jsx("html", {
+        jsxs("html", {
           lang: "en",
           children: [
             jsx("head", {
-              key: 1,
               children: jsx("title", {
                 children: "Title",
               }),
             }),
-            jsx("body", {
-              key: 2,
+            jsxs("body", {
               children: [
               jsx("div", {
-                  key: 1,
                   id: "root",
                   children: jsx(App, {})
                 }),
                 jsx("script", {
                   suppressHydrationWarning: true,
-                  key: 2,
                   children: "",
                 }),
               ],
