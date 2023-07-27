@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><title>Title</title>
+  </head><body><div id="root"><div>Hello</div></div><script type="module">
+      import React from "https://esm.sh/react?dev";
+      import { hydrateRoot } from "https://esm.sh/react-dom/client?dev";
+      import { jsx, jsxs } from "https://esm.sh/react/jsx-runtime?dev";
+
+      const App = () => {
+        const [name, setName] = React.useState("Hello");
+        React.useEffect(() => {
+          setTimeout(() => {
+            setName("Hello World");
+          }, 1000);
+        }, []);
+        return jsx("div", { children: name });
+      };
+
+      const script = document.body.firstChild.nextSibling.textContent;
+
+      const reactNode = jsxs("html", {
+        lang: "en",
+        children: [
+          jsx("head", {
+            children: jsx("title", {
+              children: "Title",
+            }),
+          }),
+          jsxs("body", {
+            children: [
+            jsx("div", {
+                id: "root",
+                children: jsx(App, {})
+              }),
+              jsx("script", {
+                type: "module",
+                children: script,
+              }),
+            ],
+          }),
+        ],
+      })
+
+      hydrateRoot(document, packUnpack(reactNode));
+
+      //
+      function packUnpack(reactNode) {
+        // this is our way to emulate network boundary
+        const string = JSON.stringify(reactNode, function replacer(key, value) {
+          if (key === "$$typeof") {
+            return String(value);
+          } else if (key === "type" && typeof value === "function") {
+            return `_CLIENT_${value.name}`;
+          } else if (key === "_store" || key === "_owner") {
+            return undefined; // this somehow fixes the hydration warning
+          } else {
+            return value;
+          }
+        }, 2);
+
+        // console.log(string);
+
+        const dehydrated = JSON.parse(string, function reviver(key, value) {
+          if (key === "$$typeof") {
+            return Symbol.for('react.element');
+          } else if (key === "type" && (""+value).startsWith("_CLIENT_")) {
+            return App;
+          } else {
+            return value;
+          }
+        });
+
+        // console.log(dehydrated);
+        return dehydrated;
+      }
+    </script>
+  </body>
+</html>

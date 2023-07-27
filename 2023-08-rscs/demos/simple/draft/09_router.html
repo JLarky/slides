@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><title>Title</title>
+  </head><body><div id="root"><div>Hello</div></div><script type="module">
+        import React from "https://esm.sh/react?dev";
+        import { hydrateRoot } from "https://esm.sh/react-dom/client?dev";
+        import { jsx, jsxs } from "https://esm.sh/react/jsx-runtime?dev";
+
+        const App = (props) => {
+          const [name, setName] = React.useState("Hello");
+          React.useEffect(() => {
+            setTimeout(() => {
+              setName("Hello World");
+            }, 1000);
+          }, []);
+          return jsxs("div", { children: [name, props.children?.()]});
+        };
+
+        const thisScript = document.body.firstChild.nextSibling.textContent;
+
+        class ClientComponentReference {
+          constructor(name) {
+            this.name = name;
+          }
+          render() {
+            return jsx(this.name, {});
+          }
+        }
+
+        const root1 = jsxs("html", {
+          lang: "en",
+          children: [
+            jsx("head", {
+              children: jsx("title", {
+                children: "Title",
+              }),
+            }),
+            jsxs("body", {
+              children: [
+                jsx("div", {
+                  id: "root",
+                  children: jsx("_SPECIAL_" + "App", {})
+                }),
+                jsx("script", {
+                  type: "module",
+                  children: thisScript,
+                }),
+              ],
+            }),
+          ],
+        });
+
+        const root2 = jsxs("html", {
+          lang: "en",
+          children: [
+            jsx("head", {
+              children: jsx("title", {
+                children: "New Title",
+              }),
+            }),
+            jsxs("body", {
+              children: [
+                jsx("div", {
+                  id: "root",
+                  children: jsx(App, {
+                    children: () => jsx("div", {children: "render prop"})
+                  })
+                }),
+                jsx("script", {
+                  type: "module",
+                  children: thisScript,
+                }),
+              ],
+            }),
+          ],
+        });
+
+        // this is extremely simplified version that only checks for components in children
+        function resolveClientReferences(node) {
+            if (node.type === "_SPECIAL_App") {
+                return {
+                    ...node,
+                    type: App // turn type into client component from a string
+                }
+            }
+            if (!node.props || !node.props.children) {
+                return node
+            }
+            return {
+                ...node,
+                props: {
+                    ...node.props,
+                    children: resolveArrayOrSingle(node.props.children)
+                }
+            }
+        }
+
+        function resolveArrayOrSingle(children) {
+            if (Array.isArray(children)) {
+                return children.map(resolveClientReferences)
+            } else {
+                return resolveClientReferences(children)
+            }
+        } 
+
+        const Router = (props) => {
+            const [url, setUrl] = React.useState(props.initialUrl);
+            if (url === "/") {
+                const x = resolveClientReferences(root1);
+                console.log(x)
+                return x;
+            }
+        }
+
+        const root = hydrateRoot(document, jsx(Router, {initialUrl: "/"}));
+
+        setTimeout(() => {
+        //   root.render(root2);
+        }, 2000);
+    </script>
+  </body>
+</html>
