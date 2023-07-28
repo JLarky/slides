@@ -1,8 +1,6 @@
-import { lazy } from "react";
 import { CRAComponent } from "./CRAComponent";
-import App from "./App";
+import CRA from "./CRA";
 
 export default function Home() {
-  // console.log(window);
-  return <CRAComponent>{<App />}</CRAComponent>;
+  return <CRAComponent>{<CRA />}</CRAComponent>;
 }

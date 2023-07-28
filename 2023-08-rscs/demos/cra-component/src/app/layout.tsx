@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { CRAComponent } from "./CRAComponent";
 
 export const metadata: Metadata = {
   title: "React App",
