@@ -2,9 +2,9 @@
 <html lang="en">
   <head><title>Title</title>
   </head><body><div id="root"><div>Hello</div></div><script type="module">
-      import React from "https://esm.sh/react?dev";
-      import { hydrateRoot } from "https://esm.sh/react-dom/client?dev";
-      import { jsx, jsxs } from "https://esm.sh/react/jsx-runtime?dev";
+      import React from "https://esm.sh/react@canary?dev";
+      import { hydrateRoot } from "https://esm.sh/react-dom@canary/client?dev";
+      import { jsx, jsxs } from "https://esm.sh/react@canary/jsx-runtime?dev";
 
       const App = (props) => {
         const [name, setName] = React.useState("Hello");
@@ -67,24 +67,29 @@
           ],
         });
 
-      const ClientRouter = ({initialClient}) => {
-        const [url, setUrl] = React.useState('/');
-        const [client, setClient] = React.useState(initialClient);
+      const fetchRSC = React.cache(async (url) => {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        if (url === '/') {
+            return packUnpack(reactNode);
+        } else if (url === '/new') {
+            return packUnpack(newReactNode);
+        }
+      });
+
+      const ClientRouter = ({initialUrl}) => {
+        const [url, setUrl] = React.useState(initialUrl);
         React.useEffect(() => {
-          setTimeout(async () => {
-            setUrl('/new');
-          }, 2000);
+            setTimeout(async () => {
+                setUrl('/new');
+            }, 2000);
         }, []);
-        React.useEffect(() => {
-          if (url === '/new') {
-            setClient(packUnpack(newReactNode));
-          }
-        }, [url]);
-        return client
+        const jsx = React.use(fetchRSC(url));
+        console.log('switched to', url);
+        // return <SomeProvider value={url}>{jsx}</SomeProvider>;
+        return jsx;
       }
 
-      const initialClient = await packUnpack(reactNode);
-      hydrateRoot(document, jsx(ClientRouter, {initialClient}));
+      hydrateRoot(document, jsx(ClientRouter, {initialUrl: '/'}));
 
       //
       function packUnpack(reactNode) {
