@@ -69,12 +69,19 @@
 
       const fetchRSC = React.cache(async (url) => {
         await new Promise((resolve) => setTimeout(resolve, 300));
+
         if (url === '/') {
             return packUnpack(reactNode);
         } else if (url === '/new') {
             return packUnpack(newReactNode);
         }
       });
+
+      const RscComponent = ({url}) => {
+        const jsx = React.use(fetchRSC(url));
+        console.log('switched to', url);
+        return jsx;
+      }
 
       const ClientRouter = ({initialUrl}) => {
         const [url, setUrl] = React.useState(initialUrl);
@@ -83,10 +90,8 @@
                 setUrl('/new');
             }, 2000);
         }, []);
-        const jsx = React.use(fetchRSC(url));
-        console.log('switched to', url);
-        // return <SomeProvider value={url}>{jsx}</SomeProvider>;
-        return jsx;
+        // return <SomeProvider value={url}><RscComponent /></SomeProvider>;
+        return jsx(RscComponent, {url});
       }
 
       hydrateRoot(document, jsx(ClientRouter, {initialUrl: '/'}));
