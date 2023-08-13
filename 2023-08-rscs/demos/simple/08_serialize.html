@@ -40,6 +40,9 @@
           }),
         ],
       })
+     
+      console.log(reactNode);
+      console.log(JSON.stringify(reactNode));
 
       hydrateRoot(document, packUnpack(reactNode));
 
@@ -58,7 +61,7 @@
           }
         }, 2);
 
-        // console.log(string);
+        console.log(string);
 
         const dehydrated = JSON.parse(string, function reviver(key, value) {
           if (key === "$$typeof") {
@@ -70,7 +73,7 @@
           }
         });
 
-        // console.log(dehydrated);
+        console.log(dehydrated);
         return dehydrated;
       }
     </script>

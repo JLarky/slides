@@ -7,6 +7,7 @@
       import { jsx, jsxs } from "https://esm.sh/react/jsx-runtime?dev";
 
       const App = (props) => {
+        console.log('App', props);
         const [name, setName] = React.useState("Hello");
         React.useEffect(() => {
           setTimeout(() => {
@@ -69,7 +70,7 @@
 
       const ClientRouter = ({initialClient}) => {
         const [url, setUrl] = React.useState('/');
-        const [client, setClient] = React.useState(initialClient);
+        const [JSX, setClient] = React.useState(initialClient);
         React.useEffect(() => {
           setTimeout(async () => {
             setUrl('/new');
@@ -80,7 +81,7 @@
             setClient(packUnpack(newReactNode));
           }
         }, [url]);
-        return client
+        return JSX
       }
 
       const initialClient = await packUnpack(reactNode);
